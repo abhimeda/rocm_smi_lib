@@ -8,10 +8,10 @@ resources:
 trigger:
 - develop
 
+pool: NV31
+
 jobs:
 - job: rocm_smi_lib
-  pool:
-    vmImage: NV31
   workspace:
     clean: all
   steps:
