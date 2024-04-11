@@ -21,11 +21,9 @@ jobs:
   - script: |
       mkdir -p build
       cd build
-      cmake ..
-      make -j $(nproc)
-      sudo make install
       cmake -DBUILD_TESTS=ON ..
       make -j $(nproc)
+      sudo make install
       cd tests/rocm_smi_test 
       ./rsmitst --gtest_output=xml:output_psdb.xml
       
