@@ -24,7 +24,7 @@ jobs:
       cmake -DBUILD_TESTS=ON ..
       make -j $(nproc)
       sudo make install
-      cd tests/rocm_smi_tes 
+      cd tests/rocm_smi_test 
       ./rsmitst --gtest_output=xml:output_psdb.xml
       
 
