@@ -17,3 +17,17 @@ jobs:
   steps:
   - template: templates/steps/preamble.yml@pipelines_repo
   - template: templates/steps/checkout.yml@pipelines_repo
+
+  - script: |
+      mkdir -p build
+      cd build
+      cmake -DBUILD_TESTS=ON ..
+      make -j $(nproc)
+      sudo make install
+      cd tests/rocm_smi_tes 
+      ./rsmitst --gtest_output=xml:output_psdb.xml
+      
+
+
+
+    
