@@ -25,7 +25,13 @@ jobs:
       make -j $(nproc)
       sudo make install
       cd tests/rocm_smi_test 
-      ./rsmitst --gtest_output=xml:output_psdb.xml
+      ./rsmitst --gtest_output=xml:test_output.xml
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFormat: 'junit'
+      testResultsFiles: '**/test_output.xml' 
+    condition: succeededOrFailed()
+    displayName: 'rocRAND Test Results'
       
 
 
