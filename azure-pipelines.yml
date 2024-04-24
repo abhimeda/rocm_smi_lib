@@ -4,36 +4,41 @@ resources:
     type: github
     endpoint: github.com_amd-jmacaran
     name: amd-jmacaran/pipelines
+  
+
+variables:
+- group: common
+- template: /.azuredevops/variables-global.yml@pipelines_repo
 
 trigger:
-- develop
+  batch: true
+  branches:
+    include:
+    - master
+  paths:
+    exclude:
+    - .github
+    - docs
+    - '**/README.md'
+    - '.*'
+    - LICENSE.txt
+    - README.md
 
-pool: gfx1100
+pr:
+  autoCancel: true
+  branches:
+    include:
+    - master
+  paths:
+    exclude:
+    - .github
+    - docs
+    - '**/README.md'
+    - '.*'
+    - LICENSE.txt
+    - README.md
+  drafts: false
 
 jobs:
-- job: rocm_smi_lib
-  workspace:
-    clean: all
-  steps:
-  - template: templates/steps/preamble.yml@pipelines_repo
-  - template: templates/steps/checkout.yml@pipelines_repo
-
-  - script: |
-      mkdir -p build
-      cd build
-      cmake -DBUILD_TESTS=ON ..
-      make -j $(nproc)
-      sudo make install
-      cd tests/rocm_smi_test 
-      ./rsmitst --gtest_output=xml:test_output.xml
-  - task: PublishTestResults@2
-    inputs:
-      testResultsFormat: 'junit'
-      testResultsFiles: '**/test_output.xml' 
-    condition: succeededOrFailed()
-    displayName: 'rocRAND Test Results'
-      
-
-
-
-    
+  - template: ${{ variables.CI_COMPONENT_PATH }}/rocm_smi_lib.yml@pipelines_repo
+  
